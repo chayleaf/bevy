@@ -165,6 +165,10 @@ pub(crate) fn play_queued_audio_system<Source: Asset + Decodable>(
                 sink.pause();
             }
 
+            if let Some(pos) = settings.position {
+                let _ = sink.try_seek(pos);
+            }
+
             match settings.mode {
                 PlaybackMode::Loop => {
                     sink.append(audio_source.decoder().repeat_infinite());
@@ -203,6 +207,10 @@ pub(crate) fn play_queued_audio_system<Source: Asset + Decodable>(
 
             if settings.paused {
                 sink.pause();
+            }
+
+            if let Some(pos) = settings.position {
+                let _ = sink.try_seek(pos);
             }
 
             match settings.mode {

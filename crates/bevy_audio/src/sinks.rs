@@ -1,7 +1,9 @@
+use std::time::Duration;
+
 use bevy_ecs::component::Component;
 use bevy_math::Vec3;
 use bevy_transform::prelude::Transform;
-use rodio::{Sink, SpatialSink};
+use rodio::{source::SeekError, Sink, SpatialSink};
 
 /// Common interactions with an audio sink.
 pub trait AudioSinkPlayback {
@@ -71,6 +73,12 @@ pub trait AudioSinkPlayback {
 
     /// Returns true if this sink has no more sounds to play.
     fn empty(&self) -> bool;
+
+    /// Returns the playback position
+    fn position(&self) -> Duration;
+
+    /// Seeks to a position
+    fn try_seek(&self, pos: Duration) -> Result<(), SeekError>;
 }
 
 /// Used to control audio during playback.
@@ -124,6 +132,14 @@ impl AudioSinkPlayback for AudioSink {
     fn empty(&self) -> bool {
         self.sink.empty()
     }
+
+    fn position(&self) -> Duration {
+        self.sink.get_pos()
+    }
+
+    fn try_seek(&self, pos: Duration) -> Result<(), SeekError> {
+        self.sink.try_seek(pos)
+    }
 }
 
 /// Used to control spatial audio during playback.
@@ -176,6 +192,14 @@ impl AudioSinkPlayback for SpatialAudioSink {
 
     fn empty(&self) -> bool {
         self.sink.empty()
+    }
+
+    fn position(&self) -> Duration {
+        self.sink.get_pos()
+    }
+
+    fn try_seek(&self, pos: Duration) -> Result<(), SeekError> {
+        self.sink.try_seek(pos)
     }
 }
 

@@ -70,6 +70,8 @@ pub struct PlaybackSettings {
     /// Optional scale factor applied to the positions of this audio source and the listener,
     /// overriding the default value configured on [`AudioPlugin::default_spatial_scale`](crate::AudioPlugin::default_spatial_scale).
     pub spatial_scale: Option<SpatialScale>,
+    /// Initial playback position
+    pub position: Option<std::time::Duration>,
 }
 
 impl Default for PlaybackSettings {
@@ -88,6 +90,7 @@ impl PlaybackSettings {
         paused: false,
         spatial: false,
         spatial_scale: None,
+        position: None,
     };
 
     /// Will play the associated audio source in a loop.
